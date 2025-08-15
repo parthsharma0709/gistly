@@ -4,8 +4,9 @@ import { useUploadThing } from "@/utils/uploadthing";
 import UploadFormInput from "./upload-form-input";
 import { z } from 'zod';
 import { toast } from "sonner";
-import { generatePdfSummary } from "@/actions/upload-actions";
+import { generatePdfSummary, storePdfSummaryAction } from "@/actions/upload-actions";
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   file: z
@@ -21,6 +22,7 @@ const schema = z.object({
 export default function UploadForm() {
   const formRef= useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading]=useState(false);
+   const router = useRouter();
 
     const { startUpload, routeConfig } = useUploadThing(
       'pdfUploader',
@@ -86,27 +88,48 @@ export default function UploadForm() {
         const result= await generatePdfSummary(resp);
         
      const {data=null ,message=null}=result || {};
+
+
      if(data){
+      let storeResult:any
         toast("saving your pdf summary")
-     }
-     formRef.current?.reset();
+        
 
+          if(data.summary){
+       storeResult= await storePdfSummaryAction({
+          summary:data.summary,
+          fileUrl:resp[0].serverData.file.ufsUrl,
+          title:data.title,
+          fileName:file.name
+        })
+     }
+
+     toast("Summary generated",{
+      description:"Your summary has been successfully summerised and saved"
+     })
      
-     if(data?.summary){
-
-     }
+   
         console.log(resp)
         console.log({result})
         // summarize the pdf using AI
         // save the summary to the database and 
         // redirect to the [id] summary page
         console.log("submitted");
+           formRef.current?.reset();
+           router.push(`/summaries/${storeResult.data.id}`);
+
+        // redirect the user to the [id] for summary page
+    }
+  
 
         }
         catch(err){
           console.error("error occured", err);
           setIsLoading(false)
           formRef.current?.reset();
+        }
+        finally{
+          setIsLoading(false);
         }
 
        

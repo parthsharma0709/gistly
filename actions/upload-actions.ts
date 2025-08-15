@@ -4,14 +4,16 @@ import { getDbConnection } from "@/lib/db";
 import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
 import { generateSummaryFromOpenAI } from "@/lib/openai";
+import { formatFileNameAsTitle } from "@/utils/format-utils";
 import { auth } from "@clerk/nextjs/server";
-import { error } from "console";
-import { toast } from "sonner";
-import { any } from "zod";
+import { revalidatePath } from "next/cache";
+import { format } from "path";
+import { title } from "process";
+
 import { _success } from "zod/v4/core";
 
 interface PdfSummaryType {
-  
+    userId?:string
     fileUrl:string,
     summary:string,
     title:string,
@@ -39,7 +41,7 @@ export async function generatePdfSummary(uploadResponse: [ {
    }
    const {serverData :{
     userId,
-    file:{ufsUrl:pdfUrl,name:FileName},
+    file:{ufsUrl:pdfUrl,name:fileName},
 },
 } = uploadResponse[0]
 
@@ -81,11 +83,14 @@ console.error(error);
         data:null
     }
     }
+
+    const formattedFileName= formatFileNameAsTitle(fileName);
     return {
         success:true,
-        message:"summary has generated successfully",
+        message:"Summary generated successfully",
         data:{
-            summary
+            summary,
+            title:formattedFileName,
         }
     }
  }
@@ -99,25 +104,30 @@ console.error(error);
     
 }
 
-async function savePdfSummary({{userId,fileUrl,summary,title,fileName,}:{userId:string,fileUrl:string,summary:string,title:string,fileName:string}}) {
+async function savePdfSummary({userId,fileUrl,summary,title,fileName,}: PdfSummaryType) {
     // sql inserting pdf summary
     try{
         const sql= await getDbConnection();
-        await sql `INSERT INTO pdf_summaries (user_id,
-         original_file_url,
-          summary_text,
-           status, 
-           title, 
-           file_name
-           )
+    const [savedSummary]=  await sql`
+INSERT INTO pdf_summaries (
+    user_id,
+    original_file_url,
+    summary_text,
+    status, 
+    title, 
+    file_name
+)
 VALUES (
-      ${userId}
-      ${fileUrl}
-      ${summary}
-      ${title}
-      ${fileName}
-                        
-);`
+    ${userId},
+    ${fileUrl},
+    ${summary},
+    'completed',  
+    ${title},
+    ${fileName}
+ ) RETURNING id,summary_text;`
+
+  return savedSummary;
+
 
     }
     catch(error){
@@ -128,25 +138,24 @@ VALUES (
 }
 
 export async function storePdfSummaryAction({
-      userId,
             fileUrl,
             summary,
             title,
             fileName
-}) {
+}:PdfSummaryType) {
     // user is logged in and has an user id 
     // saved pdf summary
     // saved pdf
-    let savePdfSummary;
+    let savedSummary:any;
     try {
         const {userId}= await auth();
         if(!userId){
             return {
                 success:false,
-                message:"user not found"
+                message:"User not found"
             }
         }
-        savePdfSummary= await savePdfSummary({
+        savedSummary= await savePdfSummary({
             userId,
             fileUrl,
             summary,
@@ -154,6 +163,12 @@ export async function storePdfSummaryAction({
             fileName
         });
 
+        if(!savedSummary){
+            return {
+                success:false,
+                message:"Failed to save PDF summary, please try aganin"
+            };
+        }
 
     }
     catch(error){
@@ -163,6 +178,17 @@ export async function storePdfSummaryAction({
     }
 
     }
+
+    // revaildate our cache
+
+     revalidatePath(`/summaries/${savedSummary.id}`);
+        return {
+            success:true,
+            message:"PDF summary saved successfully",
+            data:{
+                id:savedSummary.id
+            }
+        }
     
 }
 
