@@ -72,3 +72,19 @@ async function  createPayment({session,priceId,userEmail}:{session:Stripe.Checko
         console.error("Error while createing payment ",err);
     }
 }
+
+export async function handleSubscriptionDeleted({subscriptionId,stripe}:{subscriptionId:string;stripe:Stripe}) {
+    try{
+     const subscription= await stripe.subscriptions.retrieve(subscriptionId);
+     const sql= await getDbConnection();
+     await sql`UPDATE users SET status='cancelled' WHERE customer_id=${subscription.customer}`
+
+     console.log("subscription deleted successfully")
+
+    }
+    catch(err){
+        console.error("Error while subscription deletion",err)
+        throw err
+    }
+    
+}

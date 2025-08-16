@@ -17,6 +17,7 @@ export default async function DashboardPage(){
     }
     const userId= user?.id;
    const summaries= await getSummaries(userId)
+   const {hasReachedLimit }
     return (
    <main className="min-h-screen ">
     <BgGradient className="from-emerald-200 via-teal-200 to-cyan-200"/>

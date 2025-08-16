@@ -34,3 +34,18 @@ export async function getSummaryById(id: string) {
         return null;
     }
 }
+
+
+export async function getUploadCounts(userId:string) {
+    const sql= await getDbConnection();
+    try{
+        const [result] = await sql`SELECT COUNT(*) as count  FROM pdf_summaries WHERE user_id=${userId}`;
+        return result?.count || 0;
+
+    }
+    catch(err){
+        console.error("Error during counting summaries",err)
+        return 0;
+    }
+    
+}
