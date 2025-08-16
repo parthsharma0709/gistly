@@ -6,6 +6,7 @@ import ProgessBar from "./progress-bar";
 import { parseSection } from "@/utils/summary-helper";
 import ContentSection from "./content-section";
 import { splitSections } from "./split-section";
+import { MotionDiv } from "../common/motion-wrapper";
 
 
  const SectionTitle= ({title}:{title:string})=>{
@@ -55,7 +56,7 @@ const sections = summary
     >
       <ProgessBar sections={sections} currentSection={currentSection} />
 
-      <div className="h-full overflow-y-auto pt-12 sm:pt-16 pb-20 sm:pb-24 scrollbar-hide">
+      <MotionDiv key={currentSection} initial={{opacity:0}}  whileInView={{opacity:1}} transition={{duration:0.2, ease:'easeInOut'}} exit={{opacity:0}} className="h-full overflow-y-auto pt-12 sm:pt-16 pb-20 sm:pb-24 scrollbar-hide">
         <div className="px-4 sm:px-6">
           {/* Section Container */}
           <div className="p-4 border border-rose-500/20 rounded-xl shadow-sm bg-background/50">
@@ -71,7 +72,7 @@ const sections = summary
             </ul> */}
           </div>
         </div>
-      </div>
+      </MotionDiv>
 
       <NavigationControls
         currentSection={currentSection}

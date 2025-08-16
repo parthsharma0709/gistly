@@ -1,4 +1,6 @@
 import { Pizza } from "lucide-react";
+import { MotionH3 } from "../common/motion-wrapper";
+import SummaryViewer from "../summaries/summary-viewer";
 
 export default function DemoSection() {
   return (
@@ -11,12 +13,16 @@ export default function DemoSection() {
            </div>
 
            <div className="text-center mb-16 ">
-             <h3 className="text-3xl max-w-2xl   px-4 sm:px-6 mx-auto font-bold">
+             <MotionH3 
+             initial={{y:20 ,opacity:0}}
+             whileInView={{y:0,opacity:1}}
+             transition={{duration:0.5 ,delay:0.2}}
+              className="text-3xl max-w-2xl   px-4 sm:px-6 mx-auto font-bold">
               Watch how Gistly transforms
                <span className="bg-linear-to-r from-rose-500 to-rose-700 bg-clip-text text-transparent"> this Next.js course PDF</span>{' '}
                 into an
               easy-to-read summary!
-            </h3>
+            </MotionH3>
            </div>
 
            {/* summary*/}

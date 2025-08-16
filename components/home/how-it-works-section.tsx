@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import BgGradient from "../common/bg-gradient";
 import { BrainCircuit, FileOutput, FileText, MoveRight } from "lucide-react";
+import { MotionDiv, MotionH2, MotionH3 } from "../common/motion-wrapper";
 
 type Step={
     icon:ReactNode;
@@ -34,20 +35,35 @@ export default function HowItWorksSection(){
             <div className="py-12 lg:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 ">
              <BgGradient/>
              <div className="text-center mb-16 ">
-                <h2 className="font-bold text-xl uppercase mb-4 text-rose-500">How it works</h2>
-                <h3 className="font-bold text-3xl max-w-2xl mx-auto"> Transform any PDF into an easy-to-digest in just three simple steps</h3>
+                <MotionH2 initial={{y:20 ,opacity:0}}
+             whileInView={{y:0,opacity:1}}
+             transition={{duration:0.5 ,delay:0.2}} className="font-bold text-xl uppercase mb-4 text-rose-500">How it works</MotionH2>
+                <MotionH3 
+                 initial={{y:20 ,opacity:0}}
+             whileInView={{y:0,opacity:1}}
+             transition={{duration:0.5 ,delay:0.3}}
+                 className="font-bold text-3xl max-w-2xl mx-auto"> Transform any PDF into an easy-to-digest in just three simple steps</MotionH3>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto relative">
                 {
                      steps.map((step,idx)=> (
-                       <div className="relative flex items-stretch" key={idx}>
+                       <MotionDiv 
+                       initial={{y:50 ,opacity:0}}
+             whileInView={{y:0,opacity:1}}
+             transition={{duration:0.5 ,delay:0.2*idx}}
+                       className="relative flex items-stretch" key={idx}>
                         <StepItem  {...step} />
-                       {idx< steps.length-1 && <div className=" hidden md:block absolute  top-1/2  -right-4 tranform -translate-y-1/2 z-10">
+                       {idx< steps.length-1 &&
+                        <MotionDiv 
+                        initial={{opacity:0}}
+             whileInView={{opacity:1}}
+             transition={{duration:0.5 ,delay:0.2+0.3}}
+                        className=" hidden md:block absolute  top-1/2  -right-4 tranform -translate-y-1/2 z-10">
                         <MoveRight className="text-rose-400" size={32} strokeWidth={1}>
 
                         </MoveRight>
-                       </div>}
-                       </div>
+                       </MotionDiv>}
+                       </MotionDiv>
                        ) )
                 }
              </div>

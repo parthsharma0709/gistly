@@ -1,5 +1,8 @@
 // summary-helper.tsx
 
+import { containerVariants } from "@/utils/constants";
+import { MotionDiv } from "../common/motion-wrapper";
+
 function parsePoint(point: string) {
   const isNumbered = /^\d+\./.test(point);
   const isMainPoint = /^\*/.test(point);
@@ -51,7 +54,7 @@ export default function ContentSection({
         if (isEmpty) return null;
 
         return (
-          <div
+          <MotionDiv variants={containerVariants} key={points.join('')} initial='hidden' whileInView={'visible'} animate='visible' exit={'exit'}
             key={`point-${index}`}
             className="group relative bg-gradient-to-br from-gray-200/80 to-gray-400/80 p-4 rounded-2xl border border-gray-500/10 hover:shadow-lg transition-all"
           >
@@ -68,7 +71,7 @@ export default function ContentSection({
                 {text}
               </p>
             </div>
-          </div>
+          </MotionDiv>
         );
       })}
     </div>
