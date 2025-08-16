@@ -8,16 +8,26 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { title } from "process";
 import EmptySummaryState from "@/components/summaries/empty-summaries";
+import { getUserPlan, hasActivePlan, hasReachedUploadLimit } from "@/lib/user";
+import UpgradeRequired from "@/components/common/upgrade-required";
 
 export default async function DashboardPage(){
-    const uploadLimit=5;
+   
     const user= await currentUser();
     if(!user?.id){
       return redirect('/sign-in')
     }
     const userId= user?.id;
    const summaries= await getSummaries(userId)
-   const {hasReachedLimit }
+   const {hasReachedLimit,uploadLimit }= await hasReachedUploadLimit(userId);
+   //@ts-ignore
+   const {isPro}=getUserPlan(userId)
+const activePlan = await hasActivePlan(user.emailAddresses[0].emailAddress);
+   if(!activePlan){
+    return (
+      <UpgradeRequired/>
+    )
+   }
     return (
    <main className="min-h-screen ">
     <BgGradient className="from-emerald-200 via-teal-200 to-cyan-200"/>
@@ -30,14 +40,17 @@ export default async function DashboardPage(){
         Transform your PDF's into concise , actionable insights
     </p>
       </div>
-     <Button className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline:">
+   {!hasReachedLimit && (
+      <Button className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline:">
          <Link href={'/upload'} className="flex text-white items-center ">
          <Plus className="w-5 h-5 mr-2"/>
          New Summary
          </Link>
        </Button>
+   )}
     </div>
-    <div className="mb-6 ">
+  {hasReachedLimit && 
+           <div className="mb-6 ">
             <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 text-rose-800">
                 <p>
                     You have reached the limit of {uploadLimit} uploads on the Basic plan.{' '}
@@ -45,6 +58,7 @@ export default async function DashboardPage(){
                 </p>
             </div>
     </div>
+  }
     {summaries.length===0? (<EmptySummaryState/>) :(
                         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0 ">
          {

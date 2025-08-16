@@ -3,9 +3,9 @@ import { FileText } from 'lucide-react';
 import { Button } from "../ui/button";
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import PlanBadge from './plan-badge';
-export default function Header(){
+
+export default async function Header(){
        
-    const isloggedIn= false;
 
     return <nav className="container flex items-center justify-between py-4 px-2  lg:px-8 mx-auto">
     <div className="flex lg:flex-1">
@@ -25,13 +25,15 @@ export default function Header(){
 
     <div className="flex lg:justify-end lg:flex-1 ">
        <SignedIn>
-                <div className="flex gap-2 items-center ">
+        
+                 <div className="flex gap-2 items-center ">
             <NavLink href={'/upload'} className='text-rose-500'>Upload a PDF</NavLink>
            <PlanBadge/>
              <SignedIn>
               <UserButton />
             </SignedIn>
         </div>    
+          
        </SignedIn>
 
          <SignedOut>

@@ -20,7 +20,7 @@ export default function EmptySummaryState() {
           className="bg-gradient-to-r from-rose-500 to-rose-700 text-white px-6 py-3 rounded-lg shadow-lg hover:from-rose-600 hover:to-rose-800 transition-all duration-300 hover:no-underline"
           variant="link"
         >
-          <a>Create your first Summary</a>
+          Create your first Summary
         </Button>
       </Link>
     </div>
