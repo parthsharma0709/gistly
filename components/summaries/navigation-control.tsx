@@ -16,6 +16,8 @@ export function NavigationControls({
   onNext: () => void;
   onSectionSelect: (index: number) => void;
 }) {
+
+  console.log("total sections", totalSections)
   return (
     <div
       className="absolute bottom-0 left-0 right-0 p-4

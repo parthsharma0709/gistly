@@ -5,18 +5,24 @@ export const parseSection = (section: string):{title:string; points:string[]} =>
   const points: string[] = [];
   let currentPoint = '';
 
-  content.forEach((line) => {
-    const trimmedLine = line.trim();
-    if (trimmedLine.startsWith('.')) {
-      if (currentPoint) points.push(currentPoint.trim());
-      currentPoint = trimmedLine;
-    } else if (!trimmedLine) {
-      if (currentPoint) points.push(currentPoint.trim());
-      currentPoint = "";
-    } else {
-      currentPoint += ' ' + trimmedLine;
-    }
-  });
+  console.log("hewy",section.length)
+  console.log("content is ",content)
+  const emojiRegex = /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u;
+
+
+content.forEach((line) => {
+  const trimmedLine = line.trim();
+  if (trimmedLine.startsWith('•') || emojiRegex.test(trimmedLine)) {
+    // treat emoji like a new bullet
+    if (currentPoint) points.push(currentPoint.trim());
+    currentPoint = trimmedLine;
+  } else if (!trimmedLine) {
+    if (currentPoint) points.push(currentPoint.trim());
+    currentPoint = "";
+  } else {
+    currentPoint += ' ' + trimmedLine;
+  }
+});
 
   if (currentPoint) {
     points.push(currentPoint.trim());

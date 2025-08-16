@@ -28,7 +28,6 @@ export default async  function SummaryPage(props:{params:Promise<{id:string}>}){
     </div>
     {file_name && <SourceInfo 
     fileName={file_name}
-   
     originalFileUrl={original_file_url}
     title={title}
     summaryText={summary_text}
