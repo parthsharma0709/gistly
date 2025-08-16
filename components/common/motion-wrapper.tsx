@@ -14,4 +14,9 @@ export const MotionP= motion.p;
 
 export const MotionForm= motion.form;
 
+
 export const MotionSpan= motion.span;
+
+export const MotionButton= motion.button;
+
+
