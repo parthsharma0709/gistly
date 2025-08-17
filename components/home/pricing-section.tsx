@@ -64,7 +64,7 @@ const PricingCard = ({ name, price, description, items, id, paymentLink }: Price
         {price > 0 ? (
           <MotionDiv variants={listVariant} className="space-y-2 flex justify-center w-full">
             <Link
-              href={paymentLink}
+              href={'https://buy.stripe.com/test_bJecN5gtE3xC5W528TabK00'}
               className={cn(
                 'w-full rounded-full flex items-center justify-center gap-2 bg-linear-to-r from-rose-800 to-rose-500 hover:from-rose-500 hover:to-rose-800 text-white border-2 py-2',
                 id === 'pro' ? 'border-rose-900' : 'border-rose-100 from-rose-400 to-rose-500',
