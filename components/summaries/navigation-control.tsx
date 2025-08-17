@@ -1,7 +1,6 @@
-
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 export function NavigationControls({
   currentSection,
@@ -16,8 +15,7 @@ export function NavigationControls({
   onNext: () => void;
   onSectionSelect: (index: number) => void;
 }) {
-
-  console.log("total sections", totalSections)
+  console.log('total sections', totalSections);
   return (
     <div
       className="absolute bottom-0 left-0 right-0 p-4
@@ -31,8 +29,8 @@ export function NavigationControls({
           onClick={onPrevious}
           disabled={currentSection === 0}
           className={cn(
-            "rounded-full w-12 h-12 transition-all duration-200 bg-gradient-to-br from-rose-500 to-rose-600 border backdrop-blur-xs border-rose-500/10",
-            currentSection === 0 ? "opacity-50" :'hover:bg-rose-500/20' 
+            'rounded-full w-12 h-12 transition-all duration-200 bg-gradient-to-br from-rose-500 to-rose-600 border backdrop-blur-xs border-rose-500/10',
+            currentSection === 0 ? 'opacity-50' : 'hover:bg-rose-500/20',
           )}
         >
           <ChevronLeft className="h-6 w-6" />
@@ -45,10 +43,10 @@ export function NavigationControls({
               key={index}
               onClick={() => onSectionSelect(index)}
               className={cn(
-                "w-2 h-2 rounded-full transition-all duration-300",
+                'w-2 h-2 rounded-full transition-all duration-300',
                 currentSection === index
-                  ? "bg-gradient-to-r from-rose-500 to-rose-600"
-                  : "bg-rose-500/20 hover:bg-rose-500/30"
+                  ? 'bg-gradient-to-r from-rose-500 to-rose-600'
+                  : 'bg-rose-500/20 hover:bg-rose-500/30',
               )}
             ></button>
           ))}
@@ -61,8 +59,8 @@ export function NavigationControls({
           onClick={onNext}
           disabled={currentSection === totalSections - 1}
           className={cn(
-            "rounded-full w-12 h-12 transition-all duration-200 bg-gradient-to-br from-rose-500 to-rose-600 border border-rose-500/10",
-            currentSection === totalSections - 1 ? "opacity-50" :"hover:bg-rose-500/20"
+            'rounded-full w-12 h-12 transition-all duration-200 bg-gradient-to-br from-rose-500 to-rose-600 border border-rose-500/10',
+            currentSection === totalSections - 1 ? 'opacity-50' : 'hover:bg-rose-500/20',
           )}
         >
           <ChevronRight className="h-6 w-6" />

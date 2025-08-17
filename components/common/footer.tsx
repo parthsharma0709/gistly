@@ -1,9 +1,17 @@
-import { motion } from "framer-motion";
-import { FileText, Zap, Star, ArrowRight, Heart, Twitter, Github, Linkedin, Mail } from "lucide-react";
-import Link from "next/link";
-import { MotionButton, MotionDiv } from "./motion-wrapper";
-
-
+import { motion } from 'framer-motion';
+import {
+  FileText,
+  Zap,
+  Star,
+  ArrowRight,
+  Heart,
+  Twitter,
+  Github,
+  Linkedin,
+  Mail,
+} from 'lucide-react';
+import Link from 'next/link';
+import { MotionButton, MotionDiv } from './motion-wrapper';
 
 export default function Footer() {
   const containerVariants = {
@@ -13,9 +21,9 @@ export default function Footer() {
       y: 0,
       transition: {
         duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
@@ -23,8 +31,8 @@ export default function Footer() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 }
-    }
+      transition: { duration: 0.5 },
+    },
   };
 
   return (
@@ -41,11 +49,10 @@ export default function Footer() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
       >
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          
           {/* Left Side - Brand & CTA */}
           <MotionDiv variants={itemVariants} className="space-y-8">
             {/* Logo & Brand */}
@@ -89,7 +96,6 @@ export default function Footer() {
           {/* Right Side - Links & Features */}
           <MotionDiv variants={itemVariants} className="space-y-8">
             <div className="grid grid-cols-2 gap-8">
-              
               {/* Product Links */}
               <div className="space-y-4">
                 <h4 className="text-lg font-semibold text-white mb-4">Product</h4>
@@ -140,12 +146,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <MotionDiv
-          variants={itemVariants}
-          className="border-t border-white/10 pt-8"
-        >
+        <MotionDiv variants={itemVariants} className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            
             {/* Copyright */}
             <div className="flex items-center space-x-2 text-gray-400">
               <span>Made with</span>
@@ -156,10 +158,10 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex items-center space-x-4">
               {[
-                { Icon: Twitter, href: "#", label: "Twitter" },
-                { Icon: Github, href: "#", label: "GitHub" },
-                { Icon: Linkedin, href: "#", label: "LinkedIn" },
-                { Icon: Mail, href: "#", label: "Email" }
+                { Icon: Twitter, href: '#', label: 'Twitter' },
+                { Icon: Github, href: '#', label: 'GitHub' },
+                { Icon: Linkedin, href: '#', label: 'LinkedIn' },
+                { Icon: Mail, href: '#', label: 'Email' },
               ].map(({ Icon, href, label }) => (
                 <Link
                   key={label}
@@ -173,19 +175,13 @@ export default function Footer() {
             </div>
 
             {/* Copyright Text */}
-            <p className="text-gray-400 text-sm">
-              © 2025 Gistly. All rights reserved.
-            </p>
+            <p className="text-gray-400 text-sm">© 2025 Gistly. All rights reserved.</p>
           </div>
         </MotionDiv>
 
         {/* Floating Action Button */}
-        <div
-          className="fixed bottom-8 right-8 z-20"
-        >
-          <button
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-2xl hover:shadow-purple-500/30 hover:scale-110 hover:rotate-12 transition-all duration-300"
-          >
+        <div className="fixed bottom-8 right-8 z-20">
+          <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-2xl hover:shadow-purple-500/30 hover:scale-110 hover:rotate-12 transition-all duration-300">
             <ArrowRight className="h-6 w-6" />
           </button>
         </div>

@@ -1,5 +1,5 @@
-import { SUMMARY_SYSTEM_PROMPT } from "@/utils/prompts";
-import OpenAI from "openai";
+import { SUMMARY_SYSTEM_PROMPT } from '@/utils/prompts';
+import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -8,14 +8,14 @@ const client = new OpenAI({
 export async function generateSummaryFromOpenAI(pdfText: string) {
   try {
     const response = await client.responses.create({
-      model: "gpt-4o-mini", // ✅ No reasoning mode here
+      model: 'gpt-4o-mini', //  No reasoning mode here
       input: [
         {
-          role: "system",
+          role: 'system',
           content: SUMMARY_SYSTEM_PROMPT,
         },
         {
-          role: "user",
+          role: 'user',
           content: `Summarize the following PDF text:\n\n${pdfText}`,
         },
       ],
@@ -25,12 +25,20 @@ export async function generateSummaryFromOpenAI(pdfText: string) {
 
     console.dir(response, { depth: null });
 
-    return response.output_text || "No summary generated.";
+    return response.output_text || 'No summary generated.';
   } catch (error: any) {
-    console.error("Error from OpenAI:", error);
-    if (error?.status === 429) {
-      throw new Error('RATE_LIMIT_EXCEEDED');
+    console.error('Error from OpenAI:', error);
+
+    //  Keep the real error details so caller can handle fallback properly
+    if (
+      error?.status === 429 ||
+      error?.code === 'insufficient_quota' ||
+      error?.code === 'rate_limit_exceeded'
+    ) {
+      // Attach a flag instead of replacing error
+      error.isQuotaError = true;
     }
-    throw error;
+
+    throw error; // let caller decide
   }
 }

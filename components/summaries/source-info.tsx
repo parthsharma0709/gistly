@@ -1,14 +1,14 @@
-import { Download, ExternalLink, FileText } from "lucide-react";
-import { Button } from "../ui/button";
-import DownloadSummaryButton from "./download-summary-button";
+import { Download, ExternalLink, FileText } from 'lucide-react';
+import { Button } from '../ui/button';
+import DownloadSummaryButton from './download-summary-button';
 
-type SourceInfoProps={
-    fileName:string;
-    originalFileUrl:string;
-    title:string;
-    summaryText:string;
-    createdAt:string
-}
+type SourceInfoProps = {
+  fileName: string;
+  originalFileUrl: string;
+  title: string;
+  summaryText: string;
+  createdAt: string;
+};
 
 export default function SourceInfo({
   originalFileUrl,
@@ -30,16 +30,17 @@ export default function SourceInfo({
           className="h-8 px-3 text-rose-600 hover:text-rose-700 hover:bg-rose-50"
           asChild
         >
-          <a
-            href={originalFileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={originalFileUrl} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="h-4 w-4 mr-1" />
             View Original
           </a>
         </Button>
-        <DownloadSummaryButton title={title} fileName={fileName} summaryText={summaryText} createdAt={createdAt} />
+        <DownloadSummaryButton
+          title={title}
+          fileName={fileName}
+          summaryText={summaryText}
+          createdAt={createdAt}
+        />
       </div>
     </div>
   );

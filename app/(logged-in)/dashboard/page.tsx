@@ -1,85 +1,121 @@
-import BgGradient from "@/components/common/bg-gradient";
-import SummaryCard from "@/components/summaries/summary-card";
-import { Button } from "@/components/ui/button";
-import { getSummaries } from "@/lib/summaries";
-import { currentUser } from "@clerk/nextjs/server";
-import { ArrowRight, Plus } from "lucide-react";
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { title } from "process";
-import EmptySummaryState from "@/components/summaries/empty-summaries";
-import { getUserPlan, hasActivePlan, hasReachedUploadLimit } from "@/lib/user";
-import UpgradeRequired from "@/components/common/upgrade-required";
-import { MotionDiv, MotionH1, MotionP } from "@/components/common/motion-wrapper";
-import { itemVariants } from "@/utils/constants";
+import BgGradient from '@/components/common/bg-gradient';
+import SummaryCard from '@/components/summaries/summary-card';
+import { Button } from '@/components/ui/button';
+import { getSummaries } from '@/lib/summaries';
+import { currentUser } from '@clerk/nextjs/server';
+import { ArrowRight, Plus } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import EmptySummaryState from '@/components/summaries/empty-summaries';
+import { getUserPlan, hasActivePlan, hasReachedUploadLimit } from '@/lib/user';
+import UpgradeRequired from '@/components/common/upgrade-required';
+import { MotionDiv, MotionH1, MotionP } from '@/components/common/motion-wrapper';
+import { itemVariants } from '@/utils/constants';
 
-export default async function DashboardPage(){
-   
-    const user= await currentUser();
-    if(!user?.id){
-      return redirect('/sign-in')
-    }
-    const userId= user?.id;
-   const summaries= await getSummaries(userId)
-   const {hasReachedLimit,uploadLimit }= await hasReachedUploadLimit(userId);
-   //@ts-ignore
-   const {isPro}=getUserPlan(userId)
-const activePlan = await hasActivePlan(user.emailAddresses[0].emailAddress);
-   if(!activePlan){
-    return (
-      <UpgradeRequired/>
-    )
-   }
-    return (
-   <main className="min-h-screen ">
-    <BgGradient className="from-emerald-200 via-teal-200 to-cyan-200"/>
-<MotionDiv 
-     initial={{y:20 ,opacity:0}}
-             animate={{y:0,opacity:1}}
-             transition={{duration:0.5}}
-className="container mx-auto flex flex-col gap-4">
-   <div className="px-2 py-12 sm:py-24 ">
-    <div className="flex gap-4 mb-8 justify-between">
-      <div className="flex flex-col gap-2">
-           <MotionH1 variants={itemVariants} initial='hidden' whileInView={'visible'} className="text-4xl font-bold tracking-tight bg-linear-to-r from-gray-600 to-gray-900 bg-clip-text text-transparent">Your Summaries</MotionH1>
-    <MotionP variants={itemVariants} initial='hidden' whileInView={'visible'} animate='visible' className="text-gray-600">
-        Transform your PDF's into concise , actionable insights
-    </MotionP>
-      </div>
-   {!hasReachedLimit && (
-   <MotionDiv variants={itemVariants} initial='hidden'  animate='visible' whileHover={{scale:1.05}} className="self-start" >
-       <Button className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline:">
-         <Link href={'/upload'} className="flex text-white items-center ">
-         <Plus className="w-5 h-5 mr-2"/>
-         New Summary
-         </Link>
-       </Button>
-   </MotionDiv>
-   )}
-    </div>
-  {hasReachedLimit && 
-           <MotionDiv variants={itemVariants} initial='hidden'  animate='visible' whileHover={{scale:1.05}} className="self-start mb-6" >
-            <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 text-rose-800">
-                <p>
-                    You have reached the limit of {uploadLimit} uploads on the Basic plan.{' '}
-                    <Link className="text-rose-800 underline font-medium underline-offset-4 inline-flex items-center" href={'/#pricing'}>Click here to upgrade to Pro{' '} <ArrowRight className="w-4 h-4 inline-block"/>  </Link>{ ''} for unlimited Uploads
-                </p>
-            </div>
-    </MotionDiv>
+export default async function DashboardPage() {
+  const user = await currentUser();
+  if (!user?.id) {
+    return redirect('/sign-in');
   }
-    {summaries.length===0? (<EmptySummaryState/>) :(
-                        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0 ">
-         {
-            summaries.map((summary,index)=>(
-                <SummaryCard key={index} summary={summary}/>
-            ))
-         }
-    </div>
-    ) }
-   </div>
-    
-</MotionDiv>
 
-   </main>
-    )
+  const userId = user.id;
+  const userEmail = user.emailAddresses[0].emailAddress;
+
+  // Get summaries
+  const summaries = await getSummaries(userId);
+
+  // Check plan & upload limit
+  const { hasReachedLimit, uploadLimit } = await hasReachedUploadLimit(userId, userEmail);
+  const { isPro } = await getUserPlan(userEmail);
+  const activePlan = await hasActivePlan(userEmail);
+
+  if (!activePlan) {
+    return <UpgradeRequired />;
+  }
+
+  return (
+    <main className="min-h-screen">
+      <BgGradient className="from-emerald-200 via-teal-200 to-cyan-200" />
+      <MotionDiv
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto flex flex-col gap-4"
+      >
+        <div className="px-2 py-12 sm:py-24">
+          <div className="flex gap-4 mb-8 justify-between">
+            <div className="flex flex-col gap-2">
+              <MotionH1
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                className="text-4xl font-bold tracking-tight bg-linear-to-r from-gray-600 to-gray-900 bg-clip-text text-transparent"
+              >
+                Your Summaries
+              </MotionH1>
+              <MotionP
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                animate="visible"
+                className="text-gray-600"
+              >
+                Transform your PDFs into concise, actionable insights
+              </MotionP>
+            </div>
+
+            {!hasReachedLimit && (
+              <MotionDiv
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover={{ scale: 1.05 }}
+                className="self-start"
+              >
+                <Button className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline">
+                  <Link href={'/upload'} className="flex text-white items-center">
+                    <Plus className="w-5 h-5 mr-2" />
+                    New Summary
+                  </Link>
+                </Button>
+              </MotionDiv>
+            )}
+          </div>
+
+          {hasReachedLimit && (
+            <MotionDiv
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ scale: 1.05 }}
+              className="self-start mb-6"
+            >
+              <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 text-rose-800">
+                <p>
+                  You have reached the limit of {uploadLimit} uploads on the Basic plan.{' '}
+                  <Link
+                    className="text-rose-800 underline font-medium underline-offset-4 inline-flex items-center"
+                    href={'/#pricing'}
+                  >
+                    Click here to upgrade to Pro <ArrowRight className="w-4 h-4 inline-block" />
+                  </Link>{' '}
+                  for unlimited uploads.
+                </p>
+              </div>
+            </MotionDiv>
+          )}
+
+          {summaries.length === 0 ? (
+            <EmptySummaryState />
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
+              {summaries.map((summary, index) => (
+                <SummaryCard key={index} summary={summary} />
+              ))}
+            </div>
+          )}
+        </div>
+      </MotionDiv>
+    </main>
+  );
 }
