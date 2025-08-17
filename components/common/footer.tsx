@@ -80,7 +80,7 @@ export default function Footer() {
                 <h3 className="text-xl font-semibold text-white">Try Gistly Now</h3>
               </div>
               <p className="text-gray-300">
-                Watch how Gistly transforms your Next.js course PDF into an easy-to-read summary!
+                Watch how Gistly transforms your  PDF into an easy-to-read summary!
               </p>
               <MotionButton
                 className="group flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-purple-500/25 transition-all duration-300"

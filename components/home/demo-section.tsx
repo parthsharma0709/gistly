@@ -22,7 +22,7 @@ export default function DemoSection() {
                 Watch how Gistly transforms
                 <span className="bg-linear-to-r from-rose-500 to-rose-700 bg-clip-text text-transparent">
                   {' '}
-                  this Next.js course PDF
+                  Your PDF
                 </span>{' '}
                 into an easy-to-read summary!
               </MotionH3>
