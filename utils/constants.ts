@@ -23,8 +23,8 @@ export const pricingPlans = [
       '24/7 priority support',
       'Markdown export',
     ],
-    paymentLink: isDev ? 'https://buy.stripe.com/test_bJecN5gtE3xC5W528TabK00' : '',
-    priceId: isDev ? 'price_1RwdooFBJX9v996V7Eq1u1E6' : '',
+    paymentLink: isDev ? 'https://buy.stripe.com/test_bJecN5gtE3xC5W528TabK00' : 'https://buy.stripe.com/test_bJecN5gtE3xC5W528TabK00',
+    priceId: isDev ? 'price_1RwdooFBJX9v996V7Eq1u1E6' : 'price_1RwdooFBJX9v996V7Eq1u1E6',
   },
 ];
 
