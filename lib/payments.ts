@@ -36,23 +36,33 @@ export async function handleCheckoutSessionCompleted({session,stripe}:{session:S
           }
 }
 
-async function createOrUpdateUser({fullName,email,customerId,priceId,status}:UpdateProps) {
-    try{
-        const sql= await getDbConnection();
-        const user= await sql`SELECT * FROM users WHERE email=${email}`;
-        if(user.length===0){
-          await sql`
-  INSERT INTO users (email, full_name, customer_id, price_id, status)
-  VALUES (${email}, ${fullName}, ${customerId}, ${priceId}, ${status})
-`;
+async function createOrUpdateUser({fullName, email, customerId, priceId, status}: UpdateProps) {
+    try {
+        const sql = await getDbConnection();
+        const user = await sql`SELECT * FROM users WHERE email=${email}`;
 
+        if(user.length === 0) {
+            // Insert new user
+            await sql`
+                INSERT INTO users (email, full_name, customer_id, price_id, status)
+                VALUES (${email}, ${fullName}, ${customerId}, ${priceId}, ${status})
+            `;
+        } else {
+            // Update existing user
+            await sql`
+                UPDATE users
+                SET full_name = ${fullName},
+                    customer_id = ${customerId},
+                    price_id = ${priceId},
+                    status = ${status}
+                WHERE email = ${email}
+            `;
         }
-
-    }
-    catch(err){
-        console.error("Error while updating user",err)
+    } catch(err) {
+        console.error("Error while updating user", err);
     }
 }
+
 
 async function  createPayment({session,priceId,userEmail}:{session:Stripe.Checkout.Session;priceId:string;userEmail:string}) {
     try{
