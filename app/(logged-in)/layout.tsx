@@ -1,5 +1,5 @@
 import UpgradeRequired from '@/components/common/upgrade-required';
-import { hasActivePlan, getSubscriptionStatus } from '@/lib/user';
+import { hasActivePlan, getSubscriptionStatus, getPriceId } from '@/lib/user';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
@@ -8,10 +8,12 @@ export default async function Layout({ children }: { children: React.ReactNode }
   if (!user) {
     redirect('/sign-in');
   }
+   const priceId = await getPriceId(user.emailAddresses[0].emailAddress);
+    const hasActiveSubscription = priceId !== null;
 
-  const hasActiveSubscription = await hasActivePlan(user.emailAddresses[0].emailAddress);
-  if (!hasActiveSubscription) {
-    return <UpgradeRequired />;
+ 
+  if (!hasActiveSubscription && priceId !== null) {
+    return <UpgradeRequired />; // only show for actual inactive subscriptions
   }
   return <>{children}</>;
 }

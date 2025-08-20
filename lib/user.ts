@@ -7,7 +7,11 @@ import { User } from '@clerk/nextjs/server';
 export async function getPriceId(email: string) {
   const sql = await getDbConnection();
   const query = await sql`SELECT price_id FROM users WHERE email=${email} AND status='active'`;
-  return query?.[0]?.price_id || 'basicplan';
+ if (!query || query.length === 0) {
+    return null; // No plan
+  }
+  
+  return query[0].price_id;
 }
 
 // Check if user has an active plan
@@ -22,6 +26,10 @@ export async function hasActivePlan(email: string) {
 export async function hasReachedUploadLimit(userId: string, email: string) {
   const uploadCount = await getUploadCounts(userId); // use userId to count
   const priceId = await getPriceId(email); // use email to get plan
+   if (!priceId) {
+    // No plan yet, default to unlimited for new users?
+    return { hasReachedLimit: false, uploadLimit: 5 };
+  }
   const isPro = pricingPlans.find((plan) => plan.priceId === priceId)?.id === 'pro';
   const uploadLimit: number = isPro ? 10000 : 5;
   return { hasReachedLimit: uploadCount >= uploadLimit, uploadLimit };
